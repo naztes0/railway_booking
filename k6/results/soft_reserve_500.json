@@ -1,0 +1,18 @@
+{
+  "pattern": "soft_reserve",
+  "vus": 500,
+  "testedAt": "2026-05-24T22:51:23.579Z",
+  "avgLatency": 234.64240470758497,
+  "minLatency": 8.922392,
+  "maxLatency": 499.809304,
+  "p90Latency": 473.990279,
+  "p95Latency": 488.1093300499999,
+  "rps": 119.24185451965754,
+  "totalReqs": 1002,
+  "successfulBookings": 1,
+  "failedBookings": 499,
+  "errorRate": 0.49800399201596807,
+  "checksTotal": 500,
+  "checksPassed": 500,
+  "totalDuration": 1120.454688
+}

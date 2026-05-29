@@ -1,0 +1,18 @@
+{
+  "pattern": "pessimistic",
+  "vus": 1,
+  "testedAt": "2026-05-24T19:53:30.852Z",
+  "avgLatency": 0,
+  "minLatency": 0,
+  "maxLatency": 0,
+  "p90Latency": 0,
+  "p95Latency": 0,
+  "rps": 0,
+  "totalReqs": 0,
+  "successfulBookings": 0,
+  "failedBookings": 0,
+  "errorRate": 0,
+  "checksTotal": 0,
+  "checksPassed": 0,
+  "totalDuration": 0
+}
