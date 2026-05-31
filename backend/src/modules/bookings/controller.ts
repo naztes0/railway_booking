@@ -54,28 +54,6 @@ export const bookingsController = {
         }
     }) as RouteHandler,
 
-    softReserve: (async (request, reply) => {
-        try {
-            const { tripId, seatId } = request.body as BookingBody
-            const userId = (request.user as any).id
-            const booking = await bookingsService.softReserve(userId, tripId, seatId)
-            reply.code(201).send(booking)
-        } catch (err: any) {
-            reply.code(err.statusCode ?? 500).send({ message: err.message })
-        }
-    }) as RouteHandler,
-
-    confirmReservation: (async (request, reply) => {
-        try {
-            const userId = (request.user as any).id
-            const { id } = request.params as { id: string }
-            const booking = await bookingsService.confirmReservation(id, userId)
-            reply.send(booking)
-        } catch (err: any) {
-            reply.code(err.statusCode ?? 500).send({ message: err.message })
-        }
-    }) as RouteHandler,
-
     findByUser: (async (request, reply) => {
         try {
             const userId = (request.user as any).id

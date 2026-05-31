@@ -3,9 +3,9 @@ import { sql } from '../../config/db.ts'
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
-const RESULTS_PATH = join(process.cwd(), '..', 'k6', 'results')
+const RESULTS_PATH = join(process.cwd(), '..', 'k6', 'results',)
 
-const PATTERNS = ['naive', 'constraint', 'pessimistic', 'optimistic', 'soft_reserve']
+const PATTERNS = ['naive', 'constraint', 'pessimistic', 'optimistic']
 const VUS_LIST = [5, 10, 50, 100, 500, 1000]
 
 export default async function adminRoutes(app: FastifyInstance) {
@@ -54,12 +54,16 @@ export default async function adminRoutes(app: FastifyInstance) {
   // get all results grouped by vus
   // GET /admin/results → { 5: { naive: {...}, constraint: {...} }, 10: {...}, ... }
   app.get('/admin/results', async (request, reply) => {
+    const { type } = request.query as { type?: string }
+
+    const isSoak = type === 'soak'
+    const basePath = isSoak ? join(RESULTS_PATH, 'soak') : RESULTS_PATH
     const results: Record<number, Record<string, any>> = {}
 
     for (const vus of VUS_LIST) {
       results[vus] = {}
       for (const pattern of PATTERNS) {
-        const filePath = join(RESULTS_PATH, `${pattern}_${vus}.json`)
+        const filePath = join(basePath, `${pattern}_${vus}.json`)
         results[vus][pattern] = existsSync(filePath)
           ? JSON.parse(readFileSync(filePath, 'utf-8'))
           : null

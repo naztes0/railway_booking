@@ -137,61 +137,61 @@ export const bookingsService = {
     // Soft Reservation
     // two-step process: reserve for N minutes, then confirm
     // closest to real-world UX (like Tickets.ua)
-    async softReserve(userId: string, tripId: number, seatId: number) {
-        return await sql.begin(async (tx) => {
-            const [seat] = await tx`
-        SELECT id FROM seats
-        WHERE id = ${seatId}
-        FOR UPDATE
-      `
-            if (!seat) {
-                throw { statusCode: 404, message: 'Seat not found' }
-            }
+    // async softReserve(userId: string, tripId: number, seatId: number) {
+    //     return await sql.begin(async (tx) => {
+    //         const [seat] = await tx`
+    //     SELECT id FROM seats
+    //     WHERE id = ${seatId}
+    //     FOR UPDATE
+    //   `
+    //         if (!seat) {
+    //             throw { statusCode: 404, message: 'Seat not found' }
+    //         }
 
-            // check for any active reservation or confirmed booking
-            const [existing] = await tx`
-        SELECT id FROM bookings
-        WHERE trip_id = ${tripId}
-          AND seat_id = ${seatId}
-          AND status IN ('confirmed', 'reserved')
-          AND (reserved_until IS NULL OR reserved_until > NOW())
-      `
-            if (existing) {
-                throw { statusCode: 409, message: 'Seat already booked or reserved' }
-            }
+    //         // check for any active reservation or confirmed booking
+    //         const [existing] = await tx`
+    //     SELECT id FROM bookings
+    //     WHERE trip_id = ${tripId}
+    //       AND seat_id = ${seatId}
+    //       AND status IN ('confirmed', 'reserved')
+    //       AND (reserved_until IS NULL OR reserved_until > NOW())
+    //   `
+    //         if (existing) {
+    //             throw { statusCode: 409, message: 'Seat already booked or reserved' }
+    //         }
 
-            // reserve for 10 minutes
-            const [booking] = await tx`
-        INSERT INTO bookings (user_id, trip_id, seat_id, status, reserved_until)
-        VALUES (
-          ${userId},
-          ${tripId},
-          ${seatId},
-          'reserved',
-          NOW() + INTERVAL '10 minutes'
-        )
-        RETURNING *
-      `
-            return booking
-        })
-    },
+    //         // reserve for 10 minutes
+    //         const [booking] = await tx`
+    //     INSERT INTO bookings (user_id, trip_id, seat_id, status, reserved_until)
+    //     VALUES (
+    //       ${userId},
+    //       ${tripId},
+    //       ${seatId},
+    //       'reserved',
+    //       NOW() + INTERVAL '10 minutes'
+    //     )
+    //     RETURNING *
+    //   `
+    //         return booking
+    //     })
+    // },
 
-    // confirm reservation (second step of soft reservation)
-    async confirmReservation(bookingId: string, userId: string) {
-        const [booking] = await sql`
-      UPDATE bookings
-      SET status = 'confirmed', reserved_until = NULL
-      WHERE id        = ${bookingId}
-        AND user_id   = ${userId}
-        AND status    = 'reserved'
-        AND reserved_until > NOW()
-      RETURNING *
-    `
-        if (!booking) {
-            throw { statusCode: 409, message: 'Reservation expired or not found' }
-        }
-        return booking
-    },
+    // // confirm reservation (second step of soft reservation)
+    // async confirmReservation(bookingId: string, userId: string) {
+    //     const [booking] = await sql`
+    //   UPDATE bookings
+    //   SET status = 'confirmed', reserved_until = NULL
+    //   WHERE id        = ${bookingId}
+    //     AND user_id   = ${userId}
+    //     AND status    = 'reserved'
+    //     AND reserved_until > NOW()
+    //   RETURNING *
+    // `
+    //     if (!booking) {
+    //         throw { statusCode: 409, message: 'Reservation expired or not found' }
+    //     }
+    //     return booking
+    // },
 
     // get all bookings for current user
     async findByUser(userId: string) {
