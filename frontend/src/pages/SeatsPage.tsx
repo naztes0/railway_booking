@@ -27,13 +27,11 @@ interface Trip {
     wagons: Wagon[]
 }
 
-type BookingPattern = 'constraint' | 'pessimistic' | 'optimistic' | 'soft_reserve'
-
 const SeatsPage = () => {
     const [trip, setTrip] = useState<Trip | null>(null)
     const [loading, setLoading] = useState(true)
     const [selectedSeats, setSelectedSeats] = useState<Seat[]>([])
-    const [pattern, setPattern] = useState<BookingPattern>('pessimistic')
+    const pattern = 'constraint'
     const [booking, setBooking] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
@@ -222,23 +220,6 @@ const SeatsPage = () => {
                             <h2 className="text-base font-bold text-gray-900 mb-4">
                                 Your order
                             </h2>
-
-                            {/* pattern selector */}
-                            <div className="mb-4">
-                                <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                                    Booking pattern
-                                </label>
-                                <select
-                                    value={pattern}
-                                    onChange={(e) => setPattern(e.target.value as BookingPattern)}
-                                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                                >
-                                    <option value="constraint">DB Constraint</option>
-                                    <option value="pessimistic">Pessimistic Lock</option>
-                                    <option value="optimistic">Optimistic Lock</option>
-                                    <option value="soft_reserve">Soft Reservation</option>
-                                </select>
-                            </div>
 
                             {/* selected seats list */}
                             <div className="mb-4 min-h-16">

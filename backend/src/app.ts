@@ -29,15 +29,6 @@ await app.register(bookingsRoutes)
 await app.register(stationsRoutes)
 await app.register(adminRoutes)
 
-setInterval(async () => {
-    await sql`
-    UPDATE bookings
-    SET status = 'expired'
-    WHERE status = 'reserved'
-      AND reserved_until < NOW()
-  `
-}, 30_000)
-
 const start = async () => {
     try {
         await app.listen({ port: env.PORT, host: '0.0.0.0' })

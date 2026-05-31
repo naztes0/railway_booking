@@ -19,7 +19,7 @@ export interface PatternResult {
 
 export type AllResults = Record<number, Record<string, PatternResult | null>>
 
-export const PATTERNS = ['naive', 'constraint', 'pessimistic', 'optimistic', 'soft_reserve']
+export const PATTERNS = ['naive', 'constraint', 'pessimistic', 'optimistic',]
 export const VUS_LIST = [5, 10, 50, 100, 500, 1000]
 
 export const PATTERN_LABELS: Record<string, string> = {
@@ -27,7 +27,6 @@ export const PATTERN_LABELS: Record<string, string> = {
     constraint: 'DB Constraint',
     pessimistic: 'Pessimistic Lock',
     optimistic: 'Optimistic Lock',
-    soft_reserve: 'Soft Reservation',
 }
 
 export const PATTERN_COLORS: Record<string, string> = {
@@ -35,5 +34,4 @@ export const PATTERN_COLORS: Record<string, string> = {
     constraint: '#22c55e',
     pessimistic: '#f97316',
     optimistic: '#3b82f6',
-    soft_reserve: '#a855f7',
 }

@@ -14,18 +14,18 @@ const App = () => {
   const [results, setResults] = useState<AllResults | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeVus, setActiveVus] = useState<number>(100)
+  const [testType, setTestType] = useState<'spike' | 'soak'>('spike')
 
   const fetchResults = async () => {
     setLoading(true)
     try {
-      const { data } = await apiClient.get('/admin/results')
+      const { data } = await apiClient.get(`/admin/results?type=${testType}`)
       setResults(data)
     } finally {
       setLoading(false)
     }
   }
-
-  useEffect(() => { fetchResults() }, [])
+  useEffect(() => { fetchResults() }, [testType])
 
   // summary cards for active vus tab
   const activeData = results?.[activeVus]
@@ -61,12 +61,40 @@ const App = () => {
               Concurrency Pattern Benchmark
             </p>
           </div>
-          <button
-            onClick={fetchResults}
-            className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Refresh
-          </button>
+
+          <div className="flex items-center gap-4">
+            <div className="bg-gray-100 p-1 rounded-lg flex items-center">
+              <button
+                onClick={() => {
+                  setTestType('spike')
+                }}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${testType === 'spike'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+                  }`}
+              >
+                Spike Test
+              </button>
+              <button
+                onClick={() => {
+                  setTestType('soak')
+                }}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${testType === 'soak'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+                  }`}
+              >
+                Soak Test
+              </button>
+            </div>
+
+            <button
+              onClick={fetchResults}
+              className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Refresh
+            </button>
+          </div>
         </div>
       </header>
 
@@ -146,7 +174,7 @@ const App = () => {
               </div>
 
               {/* pattern cards */}
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
                 {PATTERNS.map((key) => {
                   const v = activeData?.[key]
                   return (
