@@ -1,0 +1,18 @@
+{
+  "pattern": "constraint",
+  "vus": 50,
+  "testedAt": "2026-05-29T17:38:35.578Z",
+  "avgLatency": 16.83498216688145,
+  "minLatency": 1.134308,
+  "maxLatency": 126.381417,
+  "p90Latency": 40.381416800000075,
+  "p95Latency": 81.90690014999984,
+  "rps": 51.37128730231775,
+  "totalReqs": 1552,
+  "successfulBookings": 1,
+  "failedBookings": 1499,
+  "errorRate": 0.9658505154639175,
+  "checksTotal": 1500,
+  "checksPassed": 1500,
+  "totalDuration": 1116.04515
+}

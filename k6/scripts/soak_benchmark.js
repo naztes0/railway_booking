@@ -1,5 +1,5 @@
 import http from 'k6/http'
-import { check } from 'k6'
+import { check, sleep } from 'k6'
 import { Counter } from 'k6/metrics'
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js'
 
@@ -10,7 +10,6 @@ const HEADERS = (token) => ({
     'Authorization': `Bearer ${token}`,
 })
 
-
 const PATTERN = __ENV.PATTERN
 const VUS = parseInt(__ENV.VUS)
 
@@ -19,7 +18,6 @@ const SEAT_MAP = {
     constraint: 2,
     pessimistic: 3,
     optimistic: 4,
-    soft_reserve: 5,
 }
 
 const TRIP_ID = 1
@@ -30,10 +28,10 @@ const failedBookings = new Counter('failed_bookings')
 
 export let options = {
     scenarios: {
-        test: {
-            executor: 'per-vu-iterations',
+        soak: {
+            executor: 'constant-vus',
             vus: VUS,
-            iterations: 1,
+            duration: '30s',
         },
     },
 }
@@ -78,6 +76,10 @@ export default (data) => {
     check(res, {
         'status is 201 or 409': (r) => r.status === 201 || r.status === 409,
     })
+
+    // Для soak-тесту обов'язково треба sleep, щоб імітувати реальних юзерів
+    // і не покласти ноут нескінченним циклом
+    sleep(1);
 }
 
 export const teardown = (data) => {
@@ -108,6 +110,7 @@ export const handleSummary = (data) => {
 
     return {
         stdout: textSummary(data, { indent: ' ', enableColors: true }),
-        [`k6/results/${PATTERN}_${VUS}.json`]: JSON.stringify(summary, null, 2),
+        // Зберігаємо результати у папку soak з такою ж назвою
+        [`k6/results/soak/${PATTERN}_${VUS}.json`]: JSON.stringify(summary, null, 2),
     }
 }
