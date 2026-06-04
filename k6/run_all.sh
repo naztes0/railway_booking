@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PATTERNS=("naive" "constraint" "pessimistic" "optimistic" "soft_reserve")
+PATTERNS=("naive" "constraint" "pessimistic" "optimistic")
 VUS_LIST=(5 10 50 100 500 1000)
 
 echo "Starting full benchmark..."
@@ -15,7 +15,6 @@ for PATTERN in "${PATTERNS[@]}"; do
     k6 run --env PATTERN=$PATTERN --env VUS=$VUS k6/scripts/benchmark.js
     echo "Done: $PATTERN $VUS"
     echo "----------------------------------------"
-    # small pause between runs to let db recover
     sleep 2
   done
 done
